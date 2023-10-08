@@ -10,7 +10,7 @@ N.B: Make sure you have: `node`, `angular cli` and `maven` setup !
 
 ### 2. How to run:
 
-Create a makefile containing the commands below, or use execute them one by one, in different shells:
+Create a makefile containing the commands below, or execute them one by one, in different shells:
 
 * `cd DevOps_Project_Front && ng serve`
 
