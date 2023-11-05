@@ -1,9 +1,9 @@
 <div class="header">
   <h2>Stock List </h2>
-  <button (click)="showForm()" button class="btn btn-info">+</button>
+  <button id="showForm" (click)="showForm()" button class="btn btn-info">+</button>
 </div>
 <form (ngSubmit)="submitForm()" *ngIf="displayForm">
-  <label for="name">Stock Title:</label>
+  <label id="input-label" for="name">Stock Title:</label>
   <input [(ngModel)]="stock.title" id="title" name="title" required type="text"><br><br>
   <button (click)="addStock(stock)" button class="btn btn-info" type="submit" value="Submit">submit</button>
   <button (click)="submitForm()" button class="btn btn-danger">cancel</button>
