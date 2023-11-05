@@ -14,12 +14,11 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import lombok.extern.slf4j.Slf4j;
 import tn.esprit.devops_project.entities.Operator;
 import tn.esprit.devops_project.repositories.OperatorRepository;
 import tn.esprit.devops_project.services.OperatorServiceImpl;
 
-@Slf4j
+
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest
 @MockitoSettings(strictness = Strictness.LENIENT)
