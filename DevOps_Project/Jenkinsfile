@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         dockerCredentials               = 'dockerCredentials'
-        registry                        = 'islmm/IslemNAFFETI-5SIM3-G1-Projet4-Spring-Angular'
+        registry                        = 'islmm/islemnaffeti-5sim3-g1-projet4-spring-angular'
         dockerImage                     = ''
         sonarToken                      = credentials('sonarToken')
     }
