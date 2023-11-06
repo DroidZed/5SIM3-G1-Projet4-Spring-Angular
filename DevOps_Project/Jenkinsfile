@@ -34,7 +34,7 @@ pipeline {
                 sh "mvn jacoco:report"
              }
          }
-        stage('Docker Image') {
+/*        stage('Docker Image') {
             steps {
                 script {
                     dockerImage = docker.build registry + ":1.0.0"
@@ -50,9 +50,9 @@ pipeline {
         }
         stage("Docker Compose") {
             steps {
-                sh "docker compose start"
+                sh "docker compose up -d"
             }
-        }
+        }*/
         stage('SONAR') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
