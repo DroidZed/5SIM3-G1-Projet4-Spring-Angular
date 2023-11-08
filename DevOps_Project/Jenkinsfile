@@ -45,7 +45,7 @@ pipeline {
         stage("Docker Compose") {
             steps {
                 dir("DevOps_Project") {
-                    sh "docker compose up -d"
+                    sh "docker compose start"
                 }
             }
         }
@@ -53,7 +53,7 @@ pipeline {
             steps {
                 dir("DevOps_Project") {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                        sh "mvn test"
+                        sh "mvn test -Dspring.profiles.active=test"
                     }
                 }
             }
