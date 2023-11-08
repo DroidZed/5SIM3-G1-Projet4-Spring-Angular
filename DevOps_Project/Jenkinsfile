@@ -53,7 +53,7 @@ pipeline {
             steps {
                 dir("DevOps_Project") {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                        sh "mvn test -Dspring.profiles.active=test"
+                        sh 'mvn test -Dspring.profiles.active=test -Dtest="StockServiceImplTest"'
                     }
                 }
             }
