@@ -1,0 +1,34 @@
+version: '3.8'
+
+networks:
+  devops_project:
+    driver: bridge
+
+volumes:
+  database:
+
+
+services:
+  #  frontend:
+  database:
+    environment:
+      - MYSQ_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=devops
+    image: mysql:5.7
+    networks:
+      - devops_project
+    ports:
+      - "3306:3306"
+    volumes:
+      - database:/var/lib/mysql
+  backend:
+    depends_on:
+      - database
+    image: droidzed/spring-mailer-app:${IMAGE_TAG_SPRING_MAILER_APP}
+    networks:
+      - devops_project
+    container_name: backend-spring
+    ports:
+      - "8082:8082"
+    tty: true
+    stdin_open: true
