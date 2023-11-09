@@ -1,0 +1,49 @@
+pipeline {
+
+    agent any
+
+    environment {
+        IMAGE_TAG                       = 1.0.0
+        dockerCredentials               = 'DOCKER_CREDS'
+        registry                        = 'droidzed/AymenDHAHRI-5SIM3-G1-Projet4-Spring-Angular-Front'
+        dockerImage                     = ''
+        DISCORD_WEBHOOK_URL             = credentials("DISCORD_WEBHOOK_URL")
+        JOB_NAME                        = "Front App Building"
+    }
+
+
+    stages {
+        stage("BUILD") {
+            steps {
+                echo "Building angular..."   
+            }
+        }
+        stage('Test') {
+            steps {
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    echo 'Testing..'
+                    sh "mvn test"
+                }
+            }
+        }
+        stage("DOCKER IMAGE BUILD") {
+            steps {
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    echo "Building angular image..."  
+                }
+            }
+        }
+        stage("DOCKER IMAGE PUSH TO HUB") {
+            steps {
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    echo "Pushing angular image to hub..."   
+                }
+            }
+        }
+        stage("COMPOSE") {
+            steps {
+                sh "docker compose up -d"   
+            }
+        }
+    }
+}
