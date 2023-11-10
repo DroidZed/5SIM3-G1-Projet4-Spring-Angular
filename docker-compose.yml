@@ -9,7 +9,7 @@ volumes:
 
 
 services:
-  #  frontend:
+
   database:
     environment:
       - MYSQ_ROOT_PASSWORD=root
@@ -21,12 +21,24 @@ services:
       - "3306:3306"
     volumes:
       - database:/var/lib/mysql
+
   backend:
     depends_on:
       - database
-    image: droidzed/AymenDHAHRI-5SIM3-G1-Projet4-Spring-Angular:latest
+    image: droidzed/aymendhahri-5sim3-g1-projet4-spring-angular:latest
     networks:
       - devops_project
     container_name: backend-spring
     ports:
       - "8082:8082"
+
+  frontend:
+    depends_on:
+      - database
+      - backend
+    image: droidzed/aymendhahri-5sim3-g1-projet4-spring-angular-front:latest
+    ports:
+      - "4200:80"
+    networks:
+      - devops_project
+    container_name: frontend-angular

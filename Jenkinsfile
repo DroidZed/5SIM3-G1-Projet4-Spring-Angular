@@ -42,75 +42,72 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_TAG                       = '1.0.0'
-        dockerCredentials               = 'DOCKER_CREDS'
-        registry                        = 'droidzed/aymendhahri-5sim3-g1-projet4-spring-angular-front'
-        dockerImage                     = ''
         DISCORD_WEBHOOK_URL             = credentials("DISCORD_WEBHOOK_URL")
+        SONAR_TOKEN                     = credentials("SONAR_TOKEN")
+        testClass                       = 'ProductServiceImplTest'
     }
 
     stages {
-        stage("BUILD") {
+        stage("Octopus Start") {
             steps {
-                dir("DevOps_Project_Front") {
-                    echo "Building angular..."
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    echo 'Running in compose!'
+                    sh "docker compose up -d"
                     script {
-                        SendHook(GetBody("BUILD", "${currentBuild.currentResult}"))
+                        SendHook(GetBody("Octopus Start", "${currentBuild.currentResult}"))
                     }
                 }
             }
         }
-        stage('Test Angular') {
+        stage('Testing my Java code') {
             steps {
-                dir("DevOps_Project_Front") {
+                dir("DevOps_Project") {
                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                         echo 'Testing..'
+                        sh "mvn test -Dtest=$testClass"
+                        script {
+                            SendHook(GetBody("Octopus Start", "${currentBuild.currentResult}"))
+                        }
+                    }
+                }
+            }
+        }
+        stage('Code Coverage') {
+            steps {
+                dir("DevOps_Project") {
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        echo 'Generating code coverage files..'
+                        sh "mvn jacoco:report"
+                        script {
+                            SendHook(GetBody("Octopus Start", "${currentBuild.currentResult}"))
+                        }
+                    }
+                }
+            }
+        }
+        stage('SONAR ANALYZER') {
+            steps {
+                dir("DevOps_Project") {
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        echo 'SonarQube running...'
+                        sh "mvn sonar:sonar -Dsonar.token=$SONAR_TOKEN"
+                        script {
+                            SendHook(GetBody("SONAR ANALYZER", "${currentBuild.currentResult}"))
+                        }
+                    }
+                }
+            }
+        }
+        stage('GRAFANA') {
+            steps {
+                dir("DevOps_Project_Front") {
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        echo 'Angular testing...'
                         sh "ng test --watch=false"
                         script {
-                            SendHook(GetBody("Test Angular", "${currentBuild.currentResult}"))
+                            SendHook(GetBody("SONAR ANALYZER", "${currentBuild.currentResult}"))
                         }
                     }
-                }
-            }
-        }
-        stage("DOCKER IMAGE BUILD") {
-            steps {
-                dir("DevOps_Project_Front") {
-                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                        echo "Building angular image..."
-                        script {
-                            dockerImage = docker.build registry + ":$IMAGE_TAG"
-                            SendHook(GetBody("DOCKER IMAGE BUILD", "${currentBuild.currentResult}"))
-                        }
-                    }
-                }
-            }
-        }
-        stage("DOCKER IMAGE PUSH TO HUB") {
-            steps {
-                dir("DevOps_Project_Front") {
-                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                        echo "Pushing angular image to hub..."  
-                        script {
-                            docker.withRegistry('', dockerCredentials) { dockerImage.push() }
-                            SendHook(GetBody("DOCKER IMAGE PUSH TO HUB", "${currentBuild.currentResult}"))
-                        } 
-                    }
-                }
-            }
-        }
-        stage("Discord Notify") {
-            steps {
-                script {
-                    def body = """
-                                {
-                                  "title": "Pipeline Angular",
-                                  "msg": "Pipeline ran **smoothly**",
-                                  "status": 1
-                                }
-                        """
-
-                    SendHook(body)
                 }
             }
         }

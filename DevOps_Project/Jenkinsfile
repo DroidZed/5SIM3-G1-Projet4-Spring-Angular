@@ -42,127 +42,91 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_TAG                       = credentials('IMAGE_TAG_SPRING_MAILER_APP')
+        IMAGE_TAG                       = '1.0.0'
         dockerCredentials               = 'DOCKER_CREDS'
         registry                        = 'droidzed/aymendhahri-5sim3-g1-projet4-spring-angular'
         dockerImage                     = ''
-        SONAR_TOKEN                     = credentials('SONAR_TOKEN')
         DISCORD_WEBHOOK_URL             = credentials("DISCORD_WEBHOOK_URL")
-        JOB_NAME                        = "Backend Pipeline"
     }
 
     stages {
         stage('Tidying things up') {
             steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    echo 'Cleaning...'
-                    sh "mvn clean"
-                    script {
-                        SendHook(GetBody("Tidying things up", "${currentBuild.currentResult}"))
+                dir("DevOps_Project") {
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        echo 'Cleaning...'
+                        sh "mvn clean"
+                        script {
+                            SendHook(GetBody("Tidying things up", "${currentBuild.currentResult}"))
+                        }
                     }
                 }
             }
         }
         stage('Building the code') {
             steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    echo 'Validating...'
-                    sh "mvn validate"
-                    echo 'Compiling...'
-                    sh "mvn compile"
-                    script {
-                        SendHook(GetBody("Building the code", "${currentBuild.currentResult}"))
-                    }
-                }
-            }
-        }
-        stage('Testing my code') {
-            steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    echo 'Testing..'
-                    sh 'mvn test -Dtest="ProductServiceImplTest"'
-                    script {
-                        SendHook(GetBody("Octopus Start", "${currentBuild.currentResult}"))
-                    }
-                }
-            }
-        }
-        stage('Code Coverage') {
-            steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    echo 'Generating code coverage files..'
-                    sh "mvn jacoco:report"
-                    script {
-                        SendHook(GetBody("Octopus Start", "${currentBuild.currentResult}"))
-                    }
-                }
-            }
-        }
-        stage('Docker Image - Building') {
-            steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    echo 'Building the docker image...'
-                    script { 
-                        dockerImage = docker.build registry + ":$IMAGE_TAG"
-                        SendHook(GetBody("Octopus Start", "${currentBuild.currentResult}"))
-                    }
-                }
-            }
-        }
-        stage('Docker Image - Pushing To Registry') {
-            steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    echo 'Pushing the docker image to docker hub...'
-                    script {
-                        docker.withRegistry('', dockerCredentials) { dockerImage.push() }
-                        SendHook(GetBody("Octopus Start", "${currentBuild.currentResult}"))
-                    }
-                }
-            }
-        }
-        stage("Octopus Start") {
-            steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    echo 'Running in compose!'
-                    sh "docker compose start"
-                    script {
-                            SendHook(GetBody("Octopus Start", "${currentBuild.currentResult}"))
-                    }
-                }
-            }
-        }
-        stage('SONAR ANALYZER') {
-            steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    echo 'SonarQube running...'
-                    sh "mvn sonar:sonar -Dsonar.token=$SONAR_TOKEN"
-                    script {
-                            SendHook(GetBody("SONAR ANALYZER", "${currentBuild.currentResult}"))
+                dir("DevOps_Project") {
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        echo 'Validating...'
+                        sh "mvn validate"
+                        echo 'Compiling...'
+                        sh "mvn compile"
+                        script {
+                            SendHook(GetBody("Building the code", "${currentBuild.currentResult}"))
+                        }
                     }
                 }
             }
         }
         stage('Deploy Artefact') {
             steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    echo 'Deploying to nexus...'
-                    sh "mvn deploy -DskipTests"
-                    script {
+                dir("DevOps_Project") {
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        echo 'Deploying to nexus...'
+                        sh "mvn deploy -DskipTests"
+                        script {
                             SendHook(GetBody("Deploy Artefact", "${currentBuild.currentResult}"))
+                        }
+                    }
+                }
+            }
+        }
+        stage('Docker Image - Building') {
+            steps {
+                dir("DevOps_Project") {
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        echo 'Building the docker image...'
+                        script { 
+                            dockerImage = docker.build registry + ":$IMAGE_TAG"
+                            SendHook(GetBody("Octopus Start", "${currentBuild.currentResult}"))
+                        }
+                    }
+                }
+            }
+        }
+        stage('Docker Image - Pushing To Registry') {
+            steps {
+                dir("DevOps_Project") {
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        echo 'Pushing the docker image to docker hub...'
+                        script {
+                            docker.withRegistry('', dockerCredentials) { dockerImage.push() }
+                            SendHook(GetBody("Octopus Start", "${currentBuild.currentResult}"))
+                        }
                     }
                 }
             }
         }
         stage("Discord Notify") {
             steps {
-                 script {
+                script {
                     def body = """
-                            {
-                              "title": "Pipeline Spring",
-                              "msg": "Pipeline ran **smoothly**",
-                              "status": 1
-                            }
-                            """
+                                {
+                                  "title": "Pipeline Spring",
+                                  "msg": "Pipeline ran **smoothly**",
+                                  "status": 1
+                                }
+                        """
 
                     SendHook(body)
                 }
