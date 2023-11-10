@@ -1,15 +1,14 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class StockService {
-  private apiUrl = 'http://backend:8082/stock';
+  private apiUrl = 'http://backend:80/stock';
 
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {}
 
   public fetchAllData(): Observable<any> {
     return this.http.get(`${this.apiUrl}`);
@@ -24,9 +23,6 @@ export class StockService {
   }
 
   public addStock(stock: any): Observable<any> {
-
     return this.http.post(`${this.apiUrl}`, stock);
   }
-
-
 }

@@ -44,7 +44,7 @@ pipeline {
     environment {
         IMAGE_TAG                       = '1.0.0'
         dockerCredentials               = 'DOCKER_CREDS'
-        registry                        = 'droidzed/aymendhahri-5sim3-g1-projet4-spring-angular-front'
+        registry                        = 'droidzed/devops-project-front'
         dockerImage                     = ''
         DISCORD_WEBHOOK_URL             = credentials("DISCORD_WEBHOOK_URL")
     }
