@@ -53,7 +53,17 @@
         </dependency>
     </dependencies>
 
+    <!-- Deploy to Nexus -->
+    <distributionManagement>
+        <repository>
+        <id>deploymentRepo</id>
+        <name>Nexus Repository</name>
+        <url>http://localhost:8081/repository/maven-releases/</url>
+        </repository>
+    </distributionManagement>
+
     <build>
+       <finalName>5SIM1-G1-Projet4-Spring-Angular</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
