@@ -25,7 +25,7 @@ services:
   backend:
     depends_on:
       - database
-    image: droidzed/aymendhahri-5sim3-g1-projet4-spring-angular:latest
+    image: droidzed/aymendhahri-5sim3-g1-projet4-spring-angular:1.0.0
     networks:
       - devops_project
     container_name: backend-spring
@@ -36,7 +36,7 @@ services:
     depends_on:
       - database
       - backend
-    image: droidzed/aymendhahri-5sim3-g1-projet4-spring-angular-front:latest
+    image: droidzed/aymendhahri-5sim3-g1-projet4-spring-angular-front:1.0.0
     ports:
       - "4200:80"
     networks:
