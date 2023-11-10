@@ -5,20 +5,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.InjectMocks;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
-import tn.esprit.devops_project.entities.*;
+import tn.esprit.devops_project.entities.Invoice;
+import tn.esprit.devops_project.entities.Operator;
+import tn.esprit.devops_project.entities.Supplier;
+import tn.esprit.devops_project.entities.SupplierCategory;
 import tn.esprit.devops_project.repositories.InvoiceDetailRepository;
 import tn.esprit.devops_project.repositories.InvoiceRepository;
-import tn.esprit.devops_project.entities.Invoice;
 import tn.esprit.devops_project.repositories.OperatorRepository;
 import tn.esprit.devops_project.repositories.SupplierRepository;
 import tn.esprit.devops_project.services.InvoiceServiceImpl;
-import tn.esprit.devops_project.services.OperatorServiceImpl;
-import tn.esprit.devops_project.services.SupplierServiceImpl;
 
 import java.util.*;
 
@@ -30,7 +28,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest
 @Slf4j
-public class InvoiceServiceMockTest {
+class InvoiceServiceMockTest {
     @Mock
     private InvoiceDetailRepository invoiceDetailService;
     @Mock
@@ -39,16 +37,10 @@ public class InvoiceServiceMockTest {
     private SupplierRepository supplierRepository;
     @Mock
     private OperatorRepository operatorRepository;
-
     private InvoiceServiceImpl invoiceService;
-    //
-    private SupplierServiceImpl supplierService;
-    private OperatorServiceImpl operatorService;
     private Operator operat;
-    private Supplier supp;
     private Invoice invo;
     private Invoice invo2;
-    private InvoiceDetail invoiced;
 
     @BeforeEach
     void setUp() {
@@ -56,7 +48,7 @@ public class InvoiceServiceMockTest {
         invoiceService = new InvoiceServiceImpl(invoiceRepository, operatorRepository, invoiceDetailService, supplierRepository);
         // Set<InvoiceDetail> invoiceDetailSet = new HashSet<>();
         //
-        operatorService = new OperatorServiceImpl(operatorRepository);
+
         operat = new Operator(
                 1L,
                 "fname",
@@ -64,9 +56,8 @@ public class InvoiceServiceMockTest {
                 "password",
                 new HashSet<>()
         );
-        //
-        supplierService = new SupplierServiceImpl(supplierRepository);
-        supp = new Supplier(
+
+        Supplier supp = new Supplier(
                 1L,
                 "20",
                 "label test",
@@ -83,7 +74,7 @@ public class InvoiceServiceMockTest {
                 supp
         );
 
-        invo2= new Invoice(
+        invo2 = new Invoice(
                 2L,
                 50F, 150F,
                 new Date(),
@@ -95,7 +86,7 @@ public class InvoiceServiceMockTest {
     }
 
     @Test
-    public void testRetrieveAllInvoices() {
+    void testRetrieveAllInvoices() {
         List<Invoice> expectedInvoices = new ArrayList<>();
 
         expectedInvoices.add(invo);
@@ -110,7 +101,7 @@ public class InvoiceServiceMockTest {
     }
 
     @Test
-    public void testCancelInvoice() {
+    void testCancelInvoice() {
         when(invoiceRepository.findById(anyLong())).thenReturn(Optional.of(invo));
 
         invoiceService.cancelInvoice(1L);
@@ -122,7 +113,7 @@ public class InvoiceServiceMockTest {
     }
 
     @Test
-    public void testRetrieveInvoice() {
+    void testRetrieveInvoice() {
         when(invoiceRepository.findById(anyLong())).thenReturn(Optional.of(invo));
 
         Invoice retrievedInvoice = invoiceService.retrieveInvoice(1L);
@@ -132,7 +123,7 @@ public class InvoiceServiceMockTest {
     }
 
     @Test
-    public void testGetInvoicesBySupplier() {
+    void testGetInvoicesBySupplier() {
         Supplier supplier = new Supplier();
         when(supplierRepository.findById(anyLong())).thenReturn(Optional.of(supplier));
 
@@ -153,7 +144,7 @@ public class InvoiceServiceMockTest {
     }
 
     @Test
-    public void testAssignOperatorToInvoice() {
+    void testAssignOperatorToInvoice() {
         when(operatorRepository.findById(anyLong())).thenReturn(Optional.of(operat));
         when(invoiceRepository.findById(anyLong())).thenReturn(Optional.of(invo));
 
@@ -165,7 +156,7 @@ public class InvoiceServiceMockTest {
     }
 
     @Test
-    public void testGetTotalAmountInvoiceBetweenDates() {
+    void testGetTotalAmountInvoiceBetweenDates() {
         Date startDate = new Date();
         Date endDate = new Date();
 
