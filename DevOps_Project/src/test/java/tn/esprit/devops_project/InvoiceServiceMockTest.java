@@ -168,5 +168,3 @@ class InvoiceServiceMockTest {
         assertEquals(100.0, totalAmount, 0.01);
     }
 }
-
-
