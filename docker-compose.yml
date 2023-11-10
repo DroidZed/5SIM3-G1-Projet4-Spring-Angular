@@ -24,11 +24,9 @@ services:
   backend:
     depends_on:
       - database
-    image: droidzed/spring-mailer-app:${IMAGE_TAG_SPRING_MAILER_APP}
+    image: droidzed/AymenDHAHRI-5SIM3-G1-Projet4-Spring-Angular:latest
     networks:
       - devops_project
     container_name: backend-spring
     ports:
       - "8082:8082"
-    tty: true
-    stdin_open: true

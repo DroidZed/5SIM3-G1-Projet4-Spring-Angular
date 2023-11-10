@@ -1,3 +1,42 @@
+def SendHook(body) {
+    def curlCommand = """
+        curl -L -X POST -H "Content-Type: application/json" -d '$body' https://disco-hooker.onrender.com/hook
+    """
+
+    def response = sh(script: curlCommand, returnStatus: true)
+
+    println("Exit Code: ${response}")
+}
+
+def GetBody(stageName, stageState) {
+    if (stageState == 'FAILURE') {
+        return """
+            {
+                "title": "Pipeline Angular",
+                "msg": "One or more jobs **failed**:",
+                "status": 0,
+                "jobs": [
+                    {
+                        "name": "${stageName}", "value": "💢 FAIL"
+                    }
+                ]
+            }
+        """
+    } else {
+        return """
+            {
+                "title": "Pipeline Spring",
+                "msg": "One or more jobs **passed**:",
+                "status": 1,
+                "jobs": [
+                    {
+                        "name": "${stageName}", "value": "💚 PASS"
+                    }
+                ]
+            }
+        """
+    }
+}
 pipeline {
 
     agent any
@@ -5,7 +44,7 @@ pipeline {
     environment {
         IMAGE_TAG                       = 1.0.0
         dockerCredentials               = 'DOCKER_CREDS'
-        registry                        = 'droidzed/AymenDHAHRI-5SIM3-G1-Projet4-Spring-Angular-Front'
+        registry                        = 'droidzed/aymendhahri-5sim3-g1-projet4-spring-angular-front'
         dockerImage                     = ''
         DISCORD_WEBHOOK_URL             = credentials("DISCORD_WEBHOOK_URL")
         JOB_NAME                        = "Front App Building"
@@ -15,34 +54,49 @@ pipeline {
     stages {
         stage("BUILD") {
             steps {
-                echo "Building angular..."   
+                echo "Building angular..."
+                script {
+                    SendHook(GetBody("Tidying things up", "${currentBuild.currentResult}"))
+                }
             }
         }
-        stage('Test') {
+        stage('Test Angular') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     echo 'Testing..'
                     sh "mvn test"
+                    script {
+                        SendHook(GetBody("Test Angular", "${currentBuild.currentResult}"))
+                    }
                 }
             }
         }
         stage("DOCKER IMAGE BUILD") {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    echo "Building angular image..."  
+                    echo "Building angular image..."
+                    script {
+                        SendHook(GetBody("DOCKER IMAGE BUILD", "${currentBuild.currentResult}"))
+                    }
                 }
             }
         }
         stage("DOCKER IMAGE PUSH TO HUB") {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    echo "Pushing angular image to hub..."   
+                    echo "Pushing angular image to hub..."  
+                    script {
+                        SendHook(GetBody("DOCKER IMAGE PUSH TO HUB", "${currentBuild.currentResult}"))
+                    } 
                 }
             }
         }
-        stage("COMPOSE") {
+        stage("COMPOSE ALL Services") {
             steps {
-                sh "docker compose up -d"   
+                // sh "docker compose up -d"   
+                script {
+                    SendHook(GetBody("COMPOSE ALL Services", "${currentBuild.currentResult}"))
+                } 
             }
         }
     }
