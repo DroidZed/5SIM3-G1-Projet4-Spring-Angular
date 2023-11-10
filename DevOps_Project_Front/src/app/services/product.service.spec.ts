@@ -9,7 +9,7 @@ describe('ProductService', () => {
   let service: ProductService;
   let httpTestingController: HttpTestingController;
 
-  const apiUrl = 'http://localhost:8082/product';
+  const apiUrl = 'http://backend:8082/product';
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -113,7 +113,7 @@ describe('ProductService', () => {
 
     // Expect a single request to a specific URL with an HTTP method
     const req = httpTestingController.expectOne(
-      `http://localhost:8082/productCategoy/CLOTHING`
+      `http://backend:8082/productCategoy/CLOTHING`
     );
     expect(req.request.method).toBe('GET');
 

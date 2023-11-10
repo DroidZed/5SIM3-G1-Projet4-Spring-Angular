@@ -40,7 +40,7 @@ describe('StockService', () => {
     });
 
     // Expect a single request to a specific URL with an HTTP method
-    const req = httpTestingController.expectOne('http://localhost:8082/stock');
+    const req = httpTestingController.expectOne('http://backend:8082/stock');
     expect(req.request.method).toBe('GET');
 
     // Respond with mock data
@@ -56,13 +56,12 @@ describe('StockService', () => {
     });
 
     // Expect a single request to a specific URL with an HTTP method
-    const req = httpTestingController.expectOne('http://localhost:8082/stock/1');
+    const req = httpTestingController.expectOne('http://backend:8082/stock/1');
     expect(req.request.method).toBe('GET');
 
     // Respond with mock data
     req.flush(mockResponse);
   });
-  
 
   it('should fetch stock by quantity', () => {
     const mockResponse = { id: 1, title: 'Stock A' };
@@ -73,7 +72,9 @@ describe('StockService', () => {
     });
 
     // Expect a single request to a specific URL with an HTTP method
-    const req = httpTestingController.expectOne('http://localhost:8082/stock/quantity/1');
+    const req = httpTestingController.expectOne(
+      'http://backend:8082/stock/quantity/1'
+    );
     expect(req.request.method).toBe('GET');
 
     // Respond with mock data
@@ -89,7 +90,7 @@ describe('StockService', () => {
     });
 
     // Expect a single request to a specific URL with an HTTP method
-    const req = httpTestingController.expectOne('http://localhost:8082/stock');
+    const req = httpTestingController.expectOne('http://backend:8082/stock');
     expect(req.request.method).toBe('POST');
 
     // Respond with mock data
