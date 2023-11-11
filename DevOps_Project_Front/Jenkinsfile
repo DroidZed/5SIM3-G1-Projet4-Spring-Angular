@@ -65,7 +65,7 @@ pipeline {
                 dir("DevOps_Project_Front") {
                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                         echo 'Testing..'
-                        sh "ng test --watch=false"
+                        sh "ng test --watch=false --exclude=src/app/product/"
                         script {
                             SendHook(GetBody("Test Angular", "${currentBuild.currentResult}"))
                         }

@@ -44,7 +44,6 @@ pipeline {
     environment {
         DISCORD_WEBHOOK_URL             = credentials("DISCORD_WEBHOOK_URL")
         SONAR_TOKEN                     = credentials("SONAR_TOKEN")
-        testClass                       = 'ProductServiceImplTest'
     }
 
     stages {
@@ -64,7 +63,7 @@ pipeline {
                 dir("DevOps_Project") {
                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                         echo 'Testing..'
-                        sh "mvn test -Dtest=$testClass"
+                        sh "mvn test -Dtest=ProductServiceImplTest -Dspring.profiles.active=test"
                         script {
                             SendHook(GetBody("Octopus Start", "${currentBuild.currentResult}"))
                         }
@@ -98,16 +97,18 @@ pipeline {
                 }
             }
         }
-        stage('GRAFANA') {
+        stage("Discord Notify") {
             steps {
-                dir("DevOps_Project_Front") {
-                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                        echo 'Angular testing...'
-                        sh "ng test --watch=false"
-                        script {
-                            SendHook(GetBody("SONAR ANALYZER", "${currentBuild.currentResult}"))
-                        }
-                    }
+                script {
+                    def body = """
+                                {
+                                  "title": "Pipeline Spring",
+                                  "msg": "Pipeline ran **smoothly**",
+                                  "status": 1
+                                }
+                        """
+
+                    SendHook(body)
                 }
             }
         }

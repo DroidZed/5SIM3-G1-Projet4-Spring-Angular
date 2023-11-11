@@ -30,10 +30,10 @@ services:
     networks:
       - devops_project
     ports:
-      - "8082:80"
+      - "8082:8082"
 
   frontend:
-    container_name: fontend
+    container_name: frontend
     depends_on:
       - database
       - backend

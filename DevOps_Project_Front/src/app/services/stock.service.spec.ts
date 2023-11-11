@@ -41,7 +41,7 @@ describe('StockService', () => {
 
     // Expect a single request to a specific URL with an HTTP method
     const req = httpTestingController.expectOne(
-      'http://backend:80/devops/stock'
+      'http://backend:8082/devops/stock'
     );
     expect(req.request.method).toBe('GET');
 
@@ -59,7 +59,7 @@ describe('StockService', () => {
 
     // Expect a single request to a specific URL with an HTTP method
     const req = httpTestingController.expectOne(
-      'http://backend:80/devops/stock/1'
+      'http://backend:8082/devops/stock/1'
     );
     expect(req.request.method).toBe('GET');
 
@@ -77,7 +77,7 @@ describe('StockService', () => {
 
     // Expect a single request to a specific URL with an HTTP method
     const req = httpTestingController.expectOne(
-      'http://backend:80/devops/stock/quantity/1'
+      'http://backend:8082/devops/stock/quantity/1'
     );
     expect(req.request.method).toBe('GET');
 
@@ -95,7 +95,7 @@ describe('StockService', () => {
 
     // Expect a single request to a specific URL with an HTTP method
     const req = httpTestingController.expectOne(
-      'http://backend:80/devops/stock'
+      'http://backend:8082/devops/stock'
     );
     expect(req.request.method).toBe('POST');
 
