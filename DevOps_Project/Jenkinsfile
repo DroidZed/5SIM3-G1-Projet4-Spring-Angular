@@ -32,7 +32,7 @@ pipeline {
                 dir("DevOps_Project") {
                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                         script {
-                            sh "docker build --no-cache -t medyassinemessaoud-5sim3-g1-projet4-spring-angular:1.1.0 ."
+                            sh "docker build -t medyassinemessaoud-5sim3-g1-projet4-spring-angular:1.1.0 ."
                     }
                     }
                 }
