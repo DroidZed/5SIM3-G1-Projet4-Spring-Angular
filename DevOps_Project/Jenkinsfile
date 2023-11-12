@@ -31,10 +31,11 @@ pipeline {
         stage('Docker Build') {
             steps {
                 dir("DevOps_Project") {
-
+  catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                         script {
                             dockerImage = docker.build registry + ":1.0.0"
 
+                    }
                     }
                 }
             }
