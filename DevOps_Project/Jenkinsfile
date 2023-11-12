@@ -1,0 +1,128 @@
+pipeline {
+    agent any
+
+    environment {
+        dockerCredentials               = 'dockerhubcredential'
+        registry                        = 'yassinemessaoud/MedYessineMESSAOUD-5SIM3-G1'
+        dockerImage                     = ''
+        SONAR_TOKEN                     = credentials('tokensonarqube')
+    }
+
+    stages {
+        stage('Clean') {
+            steps {
+                dir("DevOps_Project") {
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        sh "mvn clean"
+                    }
+                }
+            }
+        }
+        stage('Build') {
+            steps {
+                dir("DevOps_Project") {
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        sh "mvn validate"
+                        sh "mvn compile"
+                    }
+                }
+            }
+        }
+        stage('Docker Build') {
+            steps {
+                dir("DevOps_Project") {
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        script {
+                            dockerImage = docker.build registry + ":1.0.0"
+                            emailext body: "Docker Build status: ${currentBuild.currentResult}",
+                                    subject: 'Docker Build',
+                                    to: 'medyassinee.messaoud@esprit.tn'
+                        }
+                    }
+                }
+            }
+        }
+        stage('Docker Push') {
+            steps {
+                dir("DevOps_Project") {
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        script {
+                            docker.withRegistry('', dockerCredentials) { dockerImage.push() }
+                            emailext body: "Docker Push status: ${currentBuild.currentResult}",
+                                    subject: 'Docker Push',
+                                    to: 'medyassinee.messaoud@esprit.tn'
+                        }
+                    }
+                }
+            }
+        }
+        stage('Testing Spring') {
+            steps {
+                dir("DevOps_Project") {
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        sh "mvn test -Dspring.profiles.active=test"
+                        script {
+                            emailext body: "Testing Spring status: ${currentBuild.currentResult}",
+                                    subject: 'Testing Spring',
+                                    to: 'medyassinee.messaoud@esprit.tn'
+                        }
+                    }
+                }
+            }
+        }
+        stage('Code Coverage') {
+            steps {
+                dir("DevOps_Project") {
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        sh "mvn jacoco:report"
+                        script {
+                            emailext body: "Code Coverage status: ${currentBuild.currentResult}",
+                                    subject: 'Code Coverage',
+                                    to: 'medyassinee.messaoud@esprit.tn'
+                        }
+                    }
+                }
+            }
+        }
+        stage('Sonar') {
+            steps {
+                dir("DevOps_Project") {
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        sh "mvn sonar:sonar -Dsonar.token=$SONAR_TOKEN"
+                        script {
+                            emailext body: "Sonar status: ${currentBuild.currentResult}",
+                                    subject: 'Build Compose',
+                                    to: 'medyassinee.messaoud@esprit.tn'
+                        }
+                    }
+                }
+            }
+        }
+        stage('Nexus') {
+            steps {
+                dir("DevOps_Project") {
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        sh "mvn deploy -DskipTests"
+                        script {
+                            emailext body: "Nexus status: ${currentBuild.currentResult}",
+                                    subject: 'Nxus stage',
+                                    to: 'medyassinee.messaoud@esprit.tn'
+                        }
+                    }
+                }
+            }
+        }
+        stage("Docker Compose") {
+            steps {
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    sh "docker compose up -d"
+                    script {
+                        emailext body: "Docker compose status: ${currentBuild.currentResult}",
+                                subject: 'Compose stage',
+                                to: 'medyassinee.messaoud@esprit.tn'
+                    }
+                }
+            }
+        }
+    }
+}
