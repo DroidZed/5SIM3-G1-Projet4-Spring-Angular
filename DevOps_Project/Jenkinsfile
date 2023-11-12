@@ -4,7 +4,6 @@ pipeline {
     environment {
         dockerCredentials               = 'dockerhubcredential'
         registry                        = 'yassinemessaoud/medyassinemessaoud-5sim3-g1-projet4-spring-angular'
-        dockerImage                     = ''
         SONAR_TOKEN                     = credentials('tokensonarqube')
     }
 
@@ -45,7 +44,7 @@ pipeline {
                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                         script {
                           sh "docker login -u ${dockerhubcredential_USR} -p ${dockerhubcredential_PSW}"
-                            sh "docker push yassinemessaoud/medyassinemessaoud-5sim3-g1-projet4-spring-angular:1.1.0"
+                           sh "docker push yassinemessaoud/medyassinemessaoud-5sim3-g1-projet4-spring-angular:1.1.0"
                         }
                     }
                 }
