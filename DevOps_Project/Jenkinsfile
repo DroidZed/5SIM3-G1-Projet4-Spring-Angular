@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         dockerCredentials               = 'dockerhubcredential'
-        registry                        = 'yassinemessaoud/MedYessineMESSAOUD-5SIM3-G1'
+        registry                        = 'yassinemessaoud/medyassinemessaoud-5sim3-g1-projet4-spring-angular'
         dockerImage                     = ''
         SONAR_TOKEN                     = credentials('tokensonarqube')
     }
