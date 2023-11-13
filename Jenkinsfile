@@ -65,7 +65,7 @@ pipeline {
                         echo 'Testing..'
                         sh "mvn test -Dtest=ProductServiceImplTest -Dspring.profiles.active=test"
                         script {
-                            SendHook(GetBody("Octopus Start", "${currentBuild.currentResult}"))
+                            SendHook(GetBody("Testing my Java code", "${currentBuild.currentResult}"))
                         }
                     }
                 }
@@ -78,7 +78,7 @@ pipeline {
                         echo 'Generating code coverage files..'
                         sh "mvn jacoco:report"
                         script {
-                            SendHook(GetBody("Octopus Start", "${currentBuild.currentResult}"))
+                            SendHook(GetBody("Code Coverage", "${currentBuild.currentResult}"))
                         }
                     }
                 }

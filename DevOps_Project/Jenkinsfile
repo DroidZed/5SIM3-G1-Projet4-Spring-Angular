@@ -98,7 +98,7 @@ pipeline {
                         echo 'Building the docker image...'
                         script { 
                             dockerImage = docker.build registry + ":$IMAGE_TAG"
-                            SendHook(GetBody("Octopus Start", "${currentBuild.currentResult}"))
+                            SendHook(GetBody("Docker Image - Building", "${currentBuild.currentResult}"))
                         }
                     }
                 }
@@ -111,7 +111,7 @@ pipeline {
                         echo 'Pushing the docker image to docker hub...'
                         script {
                             docker.withRegistry('', dockerCredentials) { dockerImage.push() }
-                            SendHook(GetBody("Octopus Start", "${currentBuild.currentResult}"))
+                            SendHook(GetBody("Docker Image - Pushing To Registry", "${currentBuild.currentResult}"))
                         }
                     }
                 }
