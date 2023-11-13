@@ -23,6 +23,7 @@ services:
       - database:/var/lib/mysql
 
   backend:
+    restart: on-failure
     container_name: backend
     depends_on:
       - database
