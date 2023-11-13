@@ -5,6 +5,8 @@ pipeline {
         dockerCredentials               = 'dockerhubcredential'
         registry                        = 'yassinemessaoud/medyassinemessaoud-5sim3-g1-projet4-spring-angular'
         SONAR_TOKEN                     = credentials('tokensonarqube')
+        dockerhubcredential_USR         = credentials('dockerhubcredential_USR')
+        dockerhubcredential_PSW         = credentials('dockerhubcredential_PSW')
     }
 
     stages {
