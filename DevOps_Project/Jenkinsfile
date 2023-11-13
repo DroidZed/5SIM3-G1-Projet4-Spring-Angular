@@ -41,33 +41,15 @@ pipeline {
                 }
             }
         }
-        stage('Docker Push') {
-            steps {
-                dir("DevOps_Project") {
-                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                        script {
-                            // Uncomment these lines for debugging purposes
-                            sh "docker login -u ${dockerhubcredential_USR} -p ${dockerhubcredential_PSW}"
-                            def pushCommand = "docker push ${registry}:1.0.0"
-                            def pushOutput = sh(script: pushCommand, returnStatus: true)
-
-                            if (pushOutput == 0) {
-                                echo "Docker Push Succeeded"
-                            } else {
-                                error "Docker Push Failed. Command Output: $pushOutput"
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        stage("Docker Compose") {
-            steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh "docker compose up -d"
-                }
-            }
-        }
+     stage('Docker Push to hub') {
+                 steps {
+                     dir("DevOps_Project") {
+                         script {
+                             docker.withRegistry('', dockerhubcredential) { dockerImage.push() }
+                         }
+                     }
+                 }
+             }
         stage('Spring Test code') {
             steps {
                 dir("DevOps_Project") {
