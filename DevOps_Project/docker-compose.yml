@@ -9,6 +9,7 @@ services:
     networks:
       - devops-network
   spring:
+    restart: on-failure
     container_name: spring
     depends_on:
       - db

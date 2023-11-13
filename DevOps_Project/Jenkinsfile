@@ -45,21 +45,28 @@ pipeline {
                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                         script {
                           sh "docker login -u ${dockerhubcredential_USR} -p ${dockerhubcredential_PSW}"
-                           sh "docker push yassinemessaoud/medyassinemessaoud-5sim3-g1-projet4-spring-angular:1.1.0"
+                          sh "docker push yassinemessaoud/medyassinemessaoud-5sim3-g1-projet4-spring-angular:1.1.0"
                         }
                     }
                 }
             }
         }
-        stage('Spring Test code') {
-                    steps {
-                        dir("DevOps_Project") {
-                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                sh 'mvn test -Dspring.profiles.active=test -Dtest="OperatorServiceImplTest"'
-                            }
-                        }
-                    }
+        stage("Docker Compose") {
+            steps {
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    sh "docker compose up -d"
                 }
+            }
+        }
+        stage('Spring Test code') {
+            steps {
+                dir("DevOps_Project") {
+                  catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                     sh 'mvn test -Dspring.datasource.url=jdbc:mysql://localhost:3306/devops?createDatabaseIfNotExist=true -Dtest="OperatorServiceImplTest"'
+                  }
+               }
+           }
+        }
         stage('Code Coverage') {
             steps {
                 dir("DevOps_Project") {
@@ -84,13 +91,6 @@ pipeline {
                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                         sh "mvn deploy -DskipTests"
                     }
-                }
-            }
-        }
-        stage("Docker Compose") {
-            steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh "docker compose up -d"
                 }
             }
         }
