@@ -10,7 +10,7 @@
         <relativePath /> <!-- lookup parent from repository -->
     </parent>
     <groupId>tn.esprit</groupId>
-    <artifactId>DevOps_Project</artifactId>
+    <artifactId>5SIM1-G1-Projet4-Spring-Angular</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <name>DevOps_Project</name>
     <description>DevOps_Project</description>
@@ -59,11 +59,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
-	<dependency>
+        <dependency>
             <groupId>io.micrometer</groupId>
-	    <artifactId>micrometer-registry-prometheus</artifactId>
-           <scope>runtime</scope>
-	</dependency>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+            <scope>runtime</scope>
+        </dependency>
         <!-- jacoco -->
 
         <dependency>
@@ -81,6 +81,8 @@
             <url>http://localhost:8081/repository/maven-snapshots/</url>
         </repository>
     </distributionManagement>
+
+    <packaging>jar</packaging>
 
     <build>
         <finalName>5SIM1-G1-Projet4-Spring-Angular</finalName>
