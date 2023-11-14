@@ -102,7 +102,7 @@ pipeline {
                 script {
                     def body = """
                                 {
-                                  "title": "Pipeline Spring",
+                                  "title": "Pipeline MISC",
                                   "msg": "Pipeline ran **smoothly**",
                                   "status": 1
                                 }
