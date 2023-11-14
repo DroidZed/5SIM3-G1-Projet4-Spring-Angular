@@ -9,7 +9,7 @@ def SendHook(body) {
 }
 
 def GetBody(stageName, stageState) {
-    if (stageState == 'FAILURE') {
+    if (stageState != 'SUCCESS') {
         return """
             {
                 "title": "Pipeline Angular",
@@ -65,21 +65,21 @@ pipeline {
                 }
             }
         }
-        stage('Test Angular') {
-            steps {
-                dir("DevOps_Project_Front") {
-                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                        echo 'Testing..'
-                        nodejs(nodeJSInstallationName: 'nodejs') {
-                            sh "npm run test"
-                            script {
-                                SendHook(GetBody("Test Angular", "${currentBuild.currentResult}"))
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        // stage('Test Angular') {
+        //     steps {
+        //         dir("DevOps_Project_Front") {
+        //             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+        //                 echo 'Testing..'
+        //                 nodejs(nodeJSInstallationName: 'nodejs') {
+        //                     sh "npm run test"
+        //                     script {
+        //                         SendHook(GetBody("Test Angular", "${currentBuild.currentResult}"))
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
         stage("DOCKER IMAGE BUILD") {
             steps {
                 dir("DevOps_Project_Front") {

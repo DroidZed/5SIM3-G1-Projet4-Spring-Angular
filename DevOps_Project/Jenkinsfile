@@ -9,7 +9,7 @@ def SendHook(body) {
 }
 
 def GetBody(stageName, stageState) {
-    if (stageState == 'FAILURE') {
+    if (stageState != 'SUCCESS') {
         return """
             {
                 "title": "Pipeline Spring",
