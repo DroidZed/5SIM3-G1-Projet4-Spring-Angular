@@ -50,16 +50,6 @@ pipeline {
     }
 
     stages {
-        stage("BUILD") {
-            steps {
-                dir("DevOps_Project_Front") {
-                    echo "Building angular..."
-                    script {
-                        SendHook(GetBody("BUILD", "${currentBuild.currentResult}"))
-                    }
-                }
-            }
-        }
         stage('Test Angular') {
             steps {
                 dir("DevOps_Project_Front") {
