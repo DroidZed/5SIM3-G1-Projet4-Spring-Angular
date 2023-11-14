@@ -50,6 +50,21 @@ pipeline {
     }
 
     stages {
+        stage('Installing Dependencies') {
+            steps {
+                dir("DevOps_Project_Front") {
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        echo 'Installing dependencies..'
+                        nodejs(nodeJSInstallationName: 'nodejs') {
+                            sh "npm ci"
+                            script {
+                                SendHook(GetBody("Installing Dependencies", "${currentBuild.currentResult}"))
+                            }
+                        }
+                    }
+                }
+            }
+        }
         stage('Test Angular') {
             steps {
                 dir("DevOps_Project_Front") {
@@ -57,9 +72,9 @@ pipeline {
                         echo 'Testing..'
                         nodejs(nodeJSInstallationName: 'nodejs') {
                             sh "npm run test"
-                        }
-                        script {
-                            SendHook(GetBody("Test Angular", "${currentBuild.currentResult}"))
+                            script {
+                                SendHook(GetBody("Test Angular", "${currentBuild.currentResult}"))
+                            }
                         }
                     }
                 }
