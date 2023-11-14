@@ -25,7 +25,7 @@ def GetBody(stageName, stageState) {
     } else {
         return """
             {
-                "title": "Pipeline Spring",
+                "title": "Pipeline Angular",
                 "msg": "One or more jobs **passed**:",
                 "status": 1,
                 "jobs": [

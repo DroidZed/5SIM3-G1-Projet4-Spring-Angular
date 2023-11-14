@@ -12,7 +12,7 @@ def GetBody(stageName, stageState) {
     if (stageState == 'FAILURE') {
         return """
             {
-                "title": "Pipeline Angular",
+                "title": "Pipeline MISC",
                 "msg": "One or more jobs **failed**:",
                 "status": 0,
                 "jobs": [
@@ -25,7 +25,7 @@ def GetBody(stageName, stageState) {
     } else {
         return """
             {
-                "title": "Pipeline Spring",
+                "title": "Pipeline MISC",
                 "msg": "One or more jobs **passed**:",
                 "status": 1,
                 "jobs": [
