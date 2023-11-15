@@ -1,0 +1,42 @@
+pipeline {
+    agent any
+
+    environment {
+        dockerhubcredential             = 'dockerhubcredential'
+        registry                        = 'yassinemessaoud/devops-front'
+        dockerImage                     = ''
+    }
+
+    stages {
+        stage('NPM INSTALL') {
+            steps {
+                dir("DevOps_Project_Front") {
+                    nodejs(nodeJSInstallationName: 'Node v16.17.1') {
+                        sh 'npm config ls'
+                    }
+                }
+            }
+        }
+        stage('Docker Build') {
+            steps {
+                dir("DevOps_Project_Front") {
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        script {
+                            // sh "docker build -t medyassinemessaoud-5sim3-g1-projet4-spring-angular:1.1.0 ."
+                            dockerImage = docker.build registry + ":1.0.0"
+                    }
+                    }
+                }
+            }
+        }
+        stage('Docker Push to hub') {
+            steps {
+                dir("DevOps_Project_Front") {
+                    script {
+                            docker.withRegistry('', dockerhubcredential) { dockerImage.push() }
+                    }
+                }
+            }
+        }
+    }
+}
