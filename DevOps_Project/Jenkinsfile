@@ -89,32 +89,7 @@ pipeline {
         }
 stage('Send Slack NotificationS') {
     steps {
-        script {
-            // Use the build result obtained from the Mockito stage
-            // jobName = "${env.JOB_NAME}"
-           // buildNumber = "${env.BUILD_NUMBER}"
-
-
-            message = """
-                Job: ${jobName}
-                Build Number: ${buildNumber}
-                Build Result: ${currentBuildResult ?: 'Not available'}
-                Checkout: Successful
-                Build "achat" Project: Successful
-                SonarQube: Successful
-                MOCKITO: Successful
-                NEXUS: Successful
-                IMAGE: Successful
-                DockerHub: Successful
-                Docker compose: Successful
-                GRAFANA PROMETHEUS: Successful
-            """
-
-            slackSend(
-                color: buildStatusColor,
-                message: message
-            )
-        }
+       slackSend (color: '#FFFF00', message: "Build Success")
     }
 
 
