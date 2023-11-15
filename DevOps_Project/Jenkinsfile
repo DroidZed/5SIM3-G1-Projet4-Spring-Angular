@@ -87,7 +87,7 @@ pipeline {
                 }
             }
         }
-stage('Send Slack Notification') {
+stage('Send Slack NotificationS') {
     steps {
         script {
             // Use the build result obtained from the Mockito stage
