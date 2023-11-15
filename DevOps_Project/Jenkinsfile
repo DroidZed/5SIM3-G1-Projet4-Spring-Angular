@@ -87,10 +87,7 @@ pipeline {
                 }
             }
         }
-stage('Send Slack NotificationS') {
-    steps {
-       slackSend (color: '#FFFF00', message: "Build Success")
-    }
+
 
 
     }
