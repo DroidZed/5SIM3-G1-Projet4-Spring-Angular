@@ -2,7 +2,7 @@ version: '3'
 
 services:
   app:
-    image: 5SIM1-G1-Projet4-Spring-Angular/myproject
+    image: 5sim1-g1-projet4-spring-angular/myproject
     restart: on-failure
     ports:
       - 8089:8089
