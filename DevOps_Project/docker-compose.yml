@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  app:
+    image: 5SIM1-G1-Projet4-Spring-Angular/myproject
+    restart: on-failure
+    ports:
+      - 8089:8089
+    depends_on:
+      - db
+    volumes:
+      - .m2:/root/.m2
+
+  db:
+    image: mysql:5.7
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    container_name: mysql_comp
+    volumes:
+      - /path/to/mysql/data:/var/lib/mysql
+      - /path/to/mysql/conf:/etc/mysql/conf.d
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8084:80"
+    container_name: phpmyadmin_comp
+    depends_on:
+      - db
+
+volumes:
+  db:
+  .m2:
