@@ -1,0 +1,37 @@
+pipeline {
+    agent any
+
+    environment {
+        dockerCredentials               = 'dockerCredentials'
+        registry                        = 'islmm/islemnaffeti-5sim3-g1-projet4-spring-angular'
+        dockerImage                     = ''
+    }
+
+    stages {
+        stage('Docker Image') {
+            steps {
+                    dir("DevOps_Project_Front") {
+                        script {
+                            dockerImage = docker.build registry + ":1.0.0"
+                    }
+                }
+            }
+        }
+        stage('Docker Push to hub') {
+            steps {
+                dir("DevOps_Project_Front") {
+                    script {
+                        docker.withRegistry('', dockerCredentials) { dockerImage.push() }
+                    }
+                }
+            }
+        }
+        stage("Docker Compose") {
+            steps {
+                dir("DevOps_Project_Front") {
+                    sh "docker compose up -d"
+                }
+            }
+        }
+    }
+}
