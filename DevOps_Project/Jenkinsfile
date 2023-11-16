@@ -78,15 +78,24 @@ pipeline {
                 }
             }
         }
-        stage('Cleanup') {
-            steps {
-                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                        sh "docker stop test_sql"
-                        sh "docker rm test_sql"
-                }
+        stage('prometheus'){
+            steps{
+                sh 'docker restart prometheus'
+            }
+        }
+
+        stage{'Grafana'}{
+            steps{
+                sh 'docker start grafana'
+            }
+        }
+
+        stage('sending email'){
+            steps{
+                mail bcc: '', body: ''' Hello from Islem,
+                Devops Pipeline with success.
+                Cordialement''',cc:'',from:'',replyTo:'',subject:'Devops',to:'islem.naffeti@esprit.tn'
             }
         }
     }
-
-   
 }
