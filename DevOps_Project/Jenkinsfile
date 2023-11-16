@@ -51,6 +51,11 @@ pipeline {
                      }
                  }
              }
+             stage("Docker compose up") {
+                      steps {
+                      sh "docker compose up -d"
+                      }
+                     }
         stage('backend Test code') {
             steps {
                 dir("DevOps_Project") {
@@ -60,6 +65,7 @@ pipeline {
                }
            }
         }
+
         stage('Code ') {
             steps {
                 dir("DevOps_Project") {
