@@ -84,7 +84,7 @@ pipeline {
             }
         }
 
-        stage{'Grafana'}{
+        stage('Grafana'){
             steps{
                 sh 'docker start grafana'
             }
