@@ -110,9 +110,7 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
-        <finalName>5SIM1-G1-Projet4-Spring-Angular</finalName>
     </build>
 
 </project>
