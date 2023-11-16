@@ -2,7 +2,7 @@ version: '3'
 
 services:
   app:
-    image: 5sim1-g1-projet4-spring-angular/myproject
+    image: dabyain/yassindaboussi-5sim3-g1-projet4-spring-angular:1.0.0
     restart: on-failure
     ports:
       - 8082:8082
