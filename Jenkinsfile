@@ -51,7 +51,7 @@ pipeline {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     echo 'Running in compose!'
-                    sh "docker compose up -d"
+                    sh "docker compose start"
                     script {
                         SendHook(GetBody("Octopus Start", "${currentBuild.currentResult}"))
                     }
