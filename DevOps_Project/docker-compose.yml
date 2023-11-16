@@ -5,7 +5,7 @@ services:
     image: 5sim1-g1-projet4-spring-angular/myproject
     restart: on-failure
     ports:
-      - 8089:8089
+      - 8082:8082
     depends_on:
       - db
     volumes:
