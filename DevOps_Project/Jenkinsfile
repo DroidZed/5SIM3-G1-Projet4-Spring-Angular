@@ -6,6 +6,7 @@ pipeline {
         registry                        = 'islmm/islemnaffeti-5sim3-g1-projet4-spring-angular'
         dockerImage                     = ''
         sonarToken                      = credentials('sonarToken')
+        MY_EMAIL                        = 'islem.naffeti@esprit.tn'
     }
 
     stages {
@@ -46,7 +47,7 @@ pipeline {
             steps {
                 dir("DevOps_Project") {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                        sh "docker run --name test_sql -p 3307:3306 mysql:5.7"
+                        sh "docker run -d --name test_sql -p 3307:3306 -e MYSQL_ROOT_PASSWORD=root mysql:5.7"
                         sh 'mvn test -Dspring.profiles.active=test -Dtest="StockServiceImplTest"'
                     }
                 }
@@ -84,6 +85,44 @@ pipeline {
                         sh "docker rm test_sql"
                 }
             }
+        }
+    }
+
+    post {
+        success {
+            mail bcc: '',
+            body: '''
+            'Dear Islem ,
+            we are happy to inform you that your pipeline ran successfully.
+            Good job!
+                -Jenkins Team.''',
+            cc: '',
+            from: "$MY_EMAIL",
+            replyTo: '',
+            subject: 'Spring Pipeline - Build Finished - Success',
+            to: "$MY_EMAIL"
+        }
+
+        failure {
+            mail bcc: '',
+            body: '''
+            'Dear Islem,
+            we are sorry to inform you that your pipeline build failed.
+            Keep working!
+                -Jenkins Team - ''',
+            cc: '',
+            from: "$MY_EMAIL",
+            replyTo: '',
+            subject: 'Spring Pipeline - Build Finished - Failure',
+            to: "$MY_EMAIL"
+        }
+
+        always {
+            emailext attachLog: true,
+            body: '', subject: 'Build finished',
+            from: "$MY_EMAIL",
+            to: "$MY_EMAIL"
+            cleanWs()
         }
     }
 }
