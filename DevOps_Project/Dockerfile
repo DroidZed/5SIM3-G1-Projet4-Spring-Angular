@@ -1,4 +1,4 @@
-FROM openjdk:17-jdk-slim
+FROM openjdk:11
 EXPOSE 8082
-ADD target/5sim1-g1-projet4-spring-angular.jar docker-spring-boot.jar
-ENTRYPOINT ["java","-jar","/docker-spring-boot.jar"]
+RUN curl -o 5sim1-g1-projet4-spring-angular.jar http://192.168.33.10:8081/repository/maven-releases/pom/groupId/springproject/v1/springproject-v1.jar
+ENTRYPOINT ["java", "-jar", "5sim1-g1-projet4-spring-angular.jar"]
