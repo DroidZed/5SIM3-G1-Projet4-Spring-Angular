@@ -46,7 +46,7 @@ pipeline {
                  steps {
                      dir("DevOps_Project") {
                          script {
-                             docker.withRegistry('', dockerhubcredential) { dockerImage.push() }
+                             docker.withRegistry('', dockerCredentials) { dockerImage.push() }
                          }
                      }
                  }
