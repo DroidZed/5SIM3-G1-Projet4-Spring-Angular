@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         dockerCredentials               = 'dockerCredentials'
-        registry                        = 'islmm/islemnaffeti-5sim3-g1-projet4-spring-angular'
+        registry                        = 'islmm/devops-front'
         dockerImage                     = ''
         MY_EMAIL                        = 'islem.naffeti@esprit.tn'
     }
@@ -24,13 +24,6 @@ pipeline {
                     script {
                         docker.withRegistry('', dockerCredentials) { dockerImage.push() }
                     }
-                }
-            }
-        }
-        stage("Docker Compose") {
-            steps {
-                dir("DevOps_Project_Front") {
-                    sh "docker compose up -d"
                 }
             }
         }
@@ -66,6 +59,8 @@ pipeline {
         }
 
         always {
+            sh "docker stop test_sql"
+            sh "docker rm test_sql"
             emailext attachLog: true,
             body: '', subject: 'Build finished',
             from: "$MY_EMAIL",
