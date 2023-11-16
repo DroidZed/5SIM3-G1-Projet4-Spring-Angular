@@ -71,6 +71,7 @@
         </repository>
     </distributionManagement>
     <build>
+        <finalName>5SIM3-G1-Projet4-Spring-Angular</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
