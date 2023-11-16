@@ -78,17 +78,7 @@ pipeline {
                 }
             }
         }
-        stage('prometheus'){
-            steps{
-                sh 'docker restart prometheus'
-            }
-        }
 
-        stage('Grafana'){
-            steps{
-                sh 'docker start grafana'
-            }
-        }
 
         stage('sending email'){
             steps{
