@@ -42,6 +42,6 @@ pipeline {
     steps {
         slackSend (color: '#FFFF00', message: "Build Successfull from angular" )
     }
-
+        }
     }
 }
